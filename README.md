@@ -30,9 +30,40 @@
 
 ---
 
-## 🍎 macOS
+## 🚀 快速开始（统一版 · 推荐）
 
-基于 [Hammerspoon](https://www.hammerspoon.org/)。
+**一个 Python3 脚本跨全平台**，无需 Hammerspoon / AutoHotkey。
+
+```bash
+# 1. 安装依赖
+pip3 install pynput keyboard
+
+# Linux X11 额外需要
+sudo apt install python3-xlib
+
+# Linux Wayland 额外需要
+sudo apt install ydotool
+
+# 2. 运行
+python3 unified/vibe-coding-ime.py
+```
+
+> **macOS 用户**: 首次运行需在「系统设置 → 隐私与安全性 → 辅助功能」中授权终端/Python。
+>
+> **Linux 用户**: 需加入 input 组：`sudo usermod -aG input $USER`（重新登录生效）。
+
+**快捷键:** F1-F6 一键发送 · Ctrl+Shift+1-6 备选 · F12 暂停/恢复 · Ctrl+C 退出
+
+统一版技术细节：[unified/README.md](unified/README.md)
+
+---
+
+## 🔧 原生方案（备选）
+
+如果你更偏好各平台的原生自动化工具：
+
+<details>
+<summary><b>🍎 macOS - Hammerspoon</b></summary>
 
 ```bash
 brew install --cask hammerspoon
@@ -40,63 +71,47 @@ mkdir -p ~/.hammerspoon
 cp init.lua ~/.hammerspoon/init.lua
 open -a Hammerspoon
 ```
+前往「系统设置 → 隐私与安全性 → 辅助功能」授权 Hammerspoon，点击菜单栏图标 **Reload Config**。
 
-前往 **系统设置 → 隐私与安全性 → 辅助功能**，开启 **Hammerspoon** 权限，点击菜单栏图标 **Reload Config**。
+备选快捷键: `Cmd + Shift + 1-6`
 
-**备选快捷键:** `Cmd + Shift + 1-6`
+</details>
 
----
+<details>
+<summary><b>🪟 Windows - AutoHotkey v2</b></summary>
 
-## 🪟 Windows
+1. 安装 [AutoHotkey v2](https://www.autohotkey.com/v2/)
+2. 双击 `windows/vibe-coding-ime.ahk`
 
-基于 [AutoHotkey v2](https://www.autohotkey.com/v2/)。
+右键脚本 → **Compile Script** 可生成独立 exe，无需安装 AutoHotkey。
 
-```powershell
-# 1. 安装 AutoHotkey v2
-# https://www.autohotkey.com/v2/
+控制键: `F12` 暂停/恢复 · `Ctrl + Alt + R` 重载
 
-# 2. 双击运行
-windows\vibe-coding-ime.ahk
-```
+</details>
 
-**进阶:** 右键脚本 → **Compile Script** 可生成独立 exe，无需安装 AutoHotkey。
-
-**控制键:** `F12` 暂停/恢复 · `Ctrl + Alt + R` 重载
-
----
-
-## 🐧 Linux
-
-基于 Python + `keyboard` + `xdotool`/`ydotool`。
+<details>
+<summary><b>🐧 Linux - Python（X11/Wayland 专用版）</b></summary>
 
 ```bash
-# Debian / Ubuntu
 sudo apt install python3-pip xdotool
 pip3 install keyboard
-
-# 运行
 python3 linux/vibe-coding-ime.py
 ```
 
-> **权限:** 需要把用户加入 `input` 组才能监听全局热键：
-> ```bash
-> sudo usermod -aG input $USER
-> # 重新登录后生效
-> ```
+附带 systemd 用户服务文件，支持开机自启。详见 [linux/README.md](linux/README.md)。
 
-**备选快捷键:** `Ctrl + Shift + 1-6` · **F12** 暂停/恢复
-
-**开机自启:** 自带 systemd 用户服务文件，详见 [linux/README.md](linux/README.md)。
+</details>
 
 ---
 
 ## 🛠️ 自定义词库
 
-| 平台 | 修改文件 |
-|:-----|:---------|
-| macOS | `~/.hammerspoon/init.lua` → Reload Config |
-| Windows | `windows/vibe-coding-ime.ahk` → `Ctrl + Alt + R` |
-| Linux | `linux/vibe-coding-ime.py` → 重启脚本 |
+| 方案 | 修改文件 | 生效方式 |
+|:-----|:---------|:---------|
+| **统一版** | `unified/vibe-coding-ime.py` | 重启脚本 |
+| macOS 原生 | `~/.hammerspoon/init.lua` | Reload Config |
+| Windows 原生 | `windows/vibe-coding-ime.ahk` | `Ctrl + Alt + R` |
+| Linux 原生 | `linux/vibe-coding-ime.py` | 重启脚本 |
 
 ---
 
@@ -104,14 +119,17 @@ python3 linux/vibe-coding-ime.py
 
 ```
 .
-├── init.lua                      # macOS Hammerspoon 配置
+├── unified/
+│   ├── vibe-coding-ime.py       # ⭐ 统一版（推荐）
+│   └── README.md
+├── init.lua                      # macOS Hammerspoon 原生版
 ├── windows/
-│   ├── vibe-coding-ime.ahk       # Windows AutoHotkey v2 脚本
-│   └── README.md                 # Windows 详细说明
+│   ├── vibe-coding-ime.ahk       # Windows AutoHotkey 原生版
+│   └── README.md
 ├── linux/
-│   ├── vibe-coding-ime.py        # Linux Python 脚本
-│   ├── vibe-coding-ime.service   # systemd 用户服务
-│   └── README.md                 # Linux 详细说明
+│   ├── vibe-coding-ime.py        # Linux Python 原生版
+│   ├── vibe-coding-ime.service   # systemd 服务
+│   └── README.md
 ├── assets/
 │   └── keyboard.webp             # 项目灵感图
 ├── README.md
