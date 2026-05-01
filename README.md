@@ -14,102 +14,122 @@
 
 | 按键 | 输出内容 | 使用场景 |
 |:----:|:---------|:---------|
-| **F1** / ⌘⇧1 | `说中文` | 让 AI 用中文回答 / 描述需求 |
-| **F2** / ⌘⇧2 | `继续` | AI 生成到一半停了，催它输出 |
-| **F3** / ⌘⇧3 | `还是报错` | AI 说修好了，一跑又崩了 |
-| **F4** / ⌘⇧4 | `你改了啥` | AI 偷偷改了一堆文件，想看 diff |
-| **F5** / ⌘⇧5 | `先别重构` | AI 突然想重写整个项目，赶紧按住 |
-| **F6** / ⌘⇧6 | `回滚回滚` | 彻底搞砸了，一键回到上一版本 |
+| **F1** / ⌘⇧1 / ^⇧1 | `说中文` | 让 AI 用中文回答 / 描述需求 |
+| **F2** / ⌘⇧2 / ^⇧2 | `继续` | AI 生成到一半停了，催它输出 |
+| **F3** / ⌘⇧3 / ^⇧3 | `还是报错` | AI 说修好了，一跑又崩了 |
+| **F4** / ⌘⇧4 / ^⇧4 | `你改了啥` | AI 偷偷改了一堆文件，想看 diff |
+| **F5** / ⌘⇧5 / ^⇧5 | `先别重构` | AI 突然想重写整个项目，赶紧按住 |
+| **F6** / ⌘⇧6 / ^⇧6 | `回滚回滚` | 彻底搞砸了，一键回到上一版本 |
 
 **特点：**
 - ✅ 一键输入，**自动回车**
 - ✅ 全局生效，在任何输入框都能用（IDE、浏览器、微信、飞书……）
-- ✅ 备选快捷键 **Cmd + Shift + 1-6**，无需担心 F1 被系统占用
-- ✅ 基于 [Hammerspoon](https://www.hammerspoon.org/)，轻量稳定，随时可改
+- ✅ **macOS + Windows 双平台支持**
+- ✅ 备选快捷键，无需担心 F1 被系统占用
+- ✅ 随时可改词，改完立即生效
 
 ---
 
-## 📦 安装
+## 🍎 macOS 安装
 
-### 前置要求
-
-- macOS（Hammerspoon 是 macOS 专用）
-- [Homebrew](https://brew.sh/)（推荐，用于安装 Hammerspoon）
-
-### 一键安装
+基于 [Hammerspoon](https://www.hammerspoon.org/)。
 
 ```bash
 # 1. 安装 Hammerspoon
 brew install --cask hammerspoon
 
-# 2. 克隆配置
-git clone https://github.com/virindihk/chinese-vibe-coding-ime.git
+# 2. 复制配置
 mkdir -p ~/.hammerspoon
-cp chinese-vibe-coding-ime/init.lua ~/.hammerspoon/init.lua
+cp init.lua ~/.hammerspoon/init.lua
 
-# 3. 启动 Hammerspoon，记得授权辅助功能
+# 3. 启动并授权辅助功能
 open -a Hammerspoon
 ```
 
-### 授权辅助功能（必须）
+前往 **系统设置 → 隐私与安全性 → 辅助功能**，开启 **Hammerspoon** 权限，然后点击菜单栏图标 **Reload Config**。
 
- Hammerspoon 需要「辅助功能」权限才能模拟按键输入。
+<details>
+<summary>macOS F1 键冲突解决</summary>
 
-前往 **系统设置 → 隐私与安全性 → 辅助功能**，将 **Hammerspoon** 加入列表并开启开关。
+macOS 默认 F1 是调亮度。三种方案：
 
-> 💡 如果列表里已有 Hammerspoon，建议先关闭再打开一次，强制刷新权限。
+| 方案 | 操作 |
+|:-----|:-----|
+| **A（推荐）** | 系统设置 → 键盘 → 键盘快捷键 → 功能键 → 勾选「将 F1、F2 等键用作标准功能键」 |
+| **B** | 直接按 **Fn + F1** ~ **Fn + F6** |
+| **C** | 使用备选快捷键 **Cmd + Shift + 1-6** |
 
-### 重新加载配置
-
-点击屏幕顶部菜单栏的 Hammerspoon 图标 → **Reload Config**。
-
-看到右上角弹出「中文 Vibe Coding 输入法已启动 ✓」就表示成功了！
+</details>
 
 ---
 
-## ⌨️ 关于 F1-F6
+## 🪟 Windows 安装
 
-macOS 默认将 F1-F12 作为媒体键（亮度/音量/Mission Control 等）。
+基于 [AutoHotkey v2](https://www.autohotkey.com/v2/)。
 
-| 方案 | 操作 | 效果 |
-|:-----|:-----|:-----|
-| **A（推荐）** | 系统设置 → 键盘 → 键盘快捷键 → 功能键 → 勾选「将 F1、F2 等键用作标准功能键」 | 直接按 F1-F6 触发 |
-| **B** | 直接按 **Fn + F1** ~ **Fn + F6** | 无需改系统设置 |
-| **C** | 使用 **Cmd + Shift + 1-6** | 完全不受 F1 媒体键影响 |
+```powershell
+# 1. 下载安装 AutoHotkey v2
+# https://www.autohotkey.com/v2/
+
+# 2. 双击运行
+windows\vibe-coding-ime.ahk
+```
+
+右下角出现键盘图标即表示运行中。
+
+<details>
+<summary>Windows 进阶：编译成 exe / 开机自启</summary>
+
+**编译成独立 exe（无需安装 AutoHotkey）：**
+右键 `vibe-coding-ime.ahk` → **Compile Script**，会生成独立可执行文件。
+
+**开机自启：**
+把 `vibe-coding-ime.exe` 放入启动文件夹：
+按 `Win + R` → 输入 `shell:startup` → 回车，把 exe 拖进去。
+
+**控制快捷键：**
+- **F12** = 暂停 / 恢复
+- **Ctrl + Alt + R** = 重新加载脚本
+
+</details>
 
 ---
 
 ## 🛠️ 自定义词库
 
-编辑 `~/.hammerspoon/init.lua`，找到 `vibeCodingPhrases`，改成你想要的任何文字：
+### macOS
+编辑 `~/.hammerspoon/init.lua`，修改 `vibeCodingPhrases` 后 Reload Config。
+
+### Windows
+编辑 `windows/vibe-coding-ime.ahk`，修改对应按键后按 `Ctrl + Alt + R` 生效。
 
 ```lua
-local vibeCodingPhrases = {
-  F1  = "说中文",
-  F2  = "继续",
-  F3  = "还是报错",
-  F4  = "你改了啥",
-  F5  = "先别重构",
-  F6  = "回滚回滚",
-  -- 可以继续加 F7-F12
-  F7  = "再试一次",
-  F8  = "写个测试",
+-- macOS 示例
+F3  = "还是报错",
+
+-- Windows 示例（AHK v2）
+F3:: {
+    SendInput("还是报错")
+    Sleep(50)
+    Send("{Enter}")
 }
 ```
 
-改完后 **Reload Config** 立即生效。
-
 ---
 
-## 🖼️ 实际效果
+## 📂 项目结构
 
-在 Cursor / VS Code / ChatGPT / 微信 / 飞书 等任何输入框中：
-
-1. 按 **F3**
-2. 自动输入 `还是报错`
-3. 自动按回车发送
-
-全程 0.1 秒，比打字快 10 倍。
+```
+.
+├── init.lua                 # macOS Hammerspoon 配置
+├── windows/
+│   ├── vibe-coding-ime.ahk  # Windows AutoHotkey v2 脚本
+│   └── README.md            # Windows 详细说明
+├── assets/
+│   └── keyboard.webp        # 项目灵感图
+├── README.md
+└── LICENSE
+```
 
 ---
 
@@ -118,7 +138,7 @@ local vibeCodingPhrases = {
 欢迎提交 Issue 和 PR！
 
 - 有新的「Vibe Coding 经典语录」？欢迎补充
-- 想支持 Windows / Linux 版本？大力欢迎
+- 想支持 Linux 版本？大力欢迎
 - 发现 Bug？随时提 Issue
 
 ---
