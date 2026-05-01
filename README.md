@@ -55,14 +55,9 @@ pip3 install pynput keyboard
 ## 🎮 使用
 
 ```bash
-# 方式一：直接运行源码
 git clone https://github.com/virindihk/chinese-vibe-coding-ime.git
 cd chinese-vibe-coding-ime
 python3 -m vibe_coding_ime
-
-# 方式二：pip 安装后命令行运行（待发布到 PyPI）
-pip3 install .
-vibe-coding-ime
 ```
 
 看到 `🔥 输入法已启动!` 就可以用了。
