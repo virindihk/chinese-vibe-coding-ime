@@ -23,95 +23,112 @@
 
 **特点：**
 - ✅ 一键输入，**自动回车**
-- ✅ 全局生效，在任何输入框都能用（IDE、浏览器、微信、飞书……）
-- ✅ **macOS + Windows + Linux 三平台支持**
+- ✅ 全局生效，任何输入框都能用（IDE、浏览器、微信、飞书……）
+- ✅ **macOS / Windows / Linux 三平台**，一个 Python 脚本全搞定
 - ✅ 备选快捷键，无需担心 F1 被系统占用
 - ✅ 随时可改词，改完立即生效
 
 ---
 
-## 🚀 快速开始（统一版 · 推荐）
-
-**一个 Python3 脚本跨全平台**，无需 Hammerspoon / AutoHotkey。
+## 🚀 安装
 
 ```bash
-# 1. 安装依赖
 pip3 install pynput keyboard
-
-# Linux X11 额外需要
-sudo apt install python3-xlib
-
-# Linux Wayland 额外需要
-sudo apt install ydotool
-
-# 2. 运行
-python3 unified/vibe-coding-ime.py
 ```
 
-> **macOS 用户**: 首次运行需在「系统设置 → 隐私与安全性 → 辅助功能」中授权终端/Python。
->
-> **Linux 用户**: 需加入 input 组：`sudo usermod -aG input $USER`（重新登录生效）。
+### 平台额外依赖
 
-**快捷键:** F1-F6 一键发送 · Ctrl+Shift+1-6 备选 · F12 暂停/恢复 · Ctrl+C 退出
+| 平台 | 额外依赖 | 安装命令 |
+|:-----|:---------|:---------|
+| **macOS** | 无 | 只需 `pip3 install pynput keyboard` |
+| **Windows** | 无 | 只需 `pip3 install pynput keyboard` |
+| **Linux X11** | python3-xlib | `sudo apt install python3-xlib` |
+| **Linux Wayland** | ydotool | `sudo apt install ydotool` |
 
-统一版技术细节：[unified/README.md](unified/README.md)
+> **Linux Wayland 用户**: 还需要启动 ydotoold 守护进程：
+> ```bash
+> sudo ydotoold &
+> ```
 
 ---
 
-## 🔧 原生方案（备选）
-
-如果你更偏好各平台的原生自动化工具：
-
-<details>
-<summary><b>🍎 macOS - Hammerspoon</b></summary>
+## 🎮 使用
 
 ```bash
-brew install --cask hammerspoon
-mkdir -p ~/.hammerspoon
-cp init.lua ~/.hammerspoon/init.lua
-open -a Hammerspoon
+# 方式一：直接运行源码
+git clone https://github.com/virindihk/chinese-vibe-coding-ime.git
+cd chinese-vibe-coding-ime
+python3 -m vibe_coding_ime
+
+# 方式二：pip 安装后命令行运行（待发布到 PyPI）
+pip3 install .
+vibe-coding-ime
 ```
-前往「系统设置 → 隐私与安全性 → 辅助功能」授权 Hammerspoon，点击菜单栏图标 **Reload Config**。
 
-备选快捷键: `Cmd + Shift + 1-6`
+看到 `🔥 输入法已启动!` 就可以用了。
 
-</details>
+| 按键 | 输出 |
+|:----:|:-----|
+| **F1** / Ctrl+Shift+1 | `说中文` ↵ |
+| **F2** / Ctrl+Shift+2 | `继续` ↵ |
+| **F3** / Ctrl+Shift+3 | `还是报错` ↵ |
+| **F4** / Ctrl+Shift+4 | `你改了啥` ↵ |
+| **F5** / Ctrl+Shift+5 | `先别重构` ↵ |
+| **F6** / Ctrl+Shift+6 | `回滚回滚` ↵ |
+| **F12** | 暂停/恢复 |
+| **Ctrl+C** | 退出 |
 
-<details>
-<summary><b>🪟 Windows - AutoHotkey v2</b></summary>
+---
 
-1. 安装 [AutoHotkey v2](https://www.autohotkey.com/v2/)
-2. 双击 `windows/vibe-coding-ime.ahk`
+## ⚙️ 权限
 
-右键脚本 → **Compile Script** 可生成独立 exe，无需安装 AutoHotkey。
+### macOS
+首次运行需要授权**辅助功能权限**：
+**系统设置 → 隐私与安全性 → 辅助功能**，将「终端」（或你运行 Python 的 app）加入列表并开启。
 
-控制键: `F12` 暂停/恢复 · `Ctrl + Alt + R` 重载
-
-</details>
-
-<details>
-<summary><b>🐧 Linux - Python（X11/Wayland 专用版）</b></summary>
-
+### Linux
+需要把用户加入 `input` 组才能监听全局热键：
 ```bash
-sudo apt install python3-pip xdotool
-pip3 install keyboard
-python3 linux/vibe-coding-ime.py
+sudo usermod -aG input $USER
+# 重新登录或重启后生效
 ```
 
-附带 systemd 用户服务文件，支持开机自启。详见 [linux/README.md](linux/README.md)。
-
-</details>
+Windows 无需额外权限。
 
 ---
 
 ## 🛠️ 自定义词库
 
-| 方案 | 修改文件 | 生效方式 |
+编辑 `vibe_coding_ime/__init__.py`，修改顶部的 `PHRASES` 字典：
+
+```python
+PHRASES = {
+    "f1": "说中文",
+    "f2": "继续",
+    "f3": "还是报错",
+    "f4": "你改了啥",
+    "f5": "先别重构",
+    "f6": "回滚回滚",
+    # 可以继续加...
+}
+```
+
+保存后重启脚本即可生效。
+
+---
+
+## 🔧 技术细节
+
+统一版会根据你的系统自动选择底层引擎：
+
+| 系统 | 热键监听 | 模拟输入 |
 |:-----|:---------|:---------|
-| **统一版** | `unified/vibe-coding-ime.py` | 重启脚本 |
-| macOS 原生 | `~/.hammerspoon/init.lua` | Reload Config |
-| Windows 原生 | `windows/vibe-coding-ime.ahk` | `Ctrl + Alt + R` |
-| Linux 原生 | `linux/vibe-coding-ime.py` | 重启脚本 |
+| macOS | pynput | pynput |
+| Windows | pynput | pynput |
+| Linux X11 | pynput | pynput |
+| Linux Wayland | keyboard (evdev) | ydotool |
+
+所有平台差异都被封装在 `InputBackend` 和 `HotkeyBackend` 类里，上层代码完全一致。
 
 ---
 
@@ -119,19 +136,12 @@ python3 linux/vibe-coding-ime.py
 
 ```
 .
-├── unified/
-│   ├── vibe-coding-ime.py       # ⭐ 统一版（推荐）
-│   └── README.md
-├── init.lua                      # macOS Hammerspoon 原生版
-├── windows/
-│   ├── vibe-coding-ime.ahk       # Windows AutoHotkey 原生版
-│   └── README.md
-├── linux/
-│   ├── vibe-coding-ime.py        # Linux Python 原生版
-│   ├── vibe-coding-ime.service   # systemd 服务
-│   └── README.md
+├── vibe_coding_ime/
+│   └── __init__.py          # 核心代码
 ├── assets/
-│   └── keyboard.webp             # 项目灵感图
+│   └── keyboard.webp        # 项目灵感图
+├── legacy/                  # 历史原生方案（Hammerspoon/AutoHotkey）
+├── pyproject.toml
 ├── README.md
 └── LICENSE
 ```

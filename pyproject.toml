@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vibe-coding-ime"
+version = "1.0.0"
+description = "🇨🇳 中文 Vibe Coding 输入法 - 按 F1-F6 一键输出程序员经典语录"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+authors = [
+    {name = "virindihk"}
+]
+keywords = ["vibe-coding", "ime", "productivity", "chinese", "developer-tools"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "pynput>=1.7.6",
+    "keyboard>=0.13.5",
+]
+
+[project.urls]
+Homepage = "https://github.com/virindihk/chinese-vibe-coding-ime"
+Repository = "https://github.com/virindihk/chinese-vibe-coding-ime"
+Issues = "https://github.com/virindihk/chinese-vibe-coding-ime/issues"
+
+[project.scripts]
+vibe-coding-ime = "vibe_coding_ime:main"

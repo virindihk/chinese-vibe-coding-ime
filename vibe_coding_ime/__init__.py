@@ -1,13 +1,7 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-🇨🇳 中文 Vibe Coding 输入法 - 统一版
-支持: macOS / Windows / Linux (X11 & Wayland)
+🇨🇳 中文 Vibe Coding 输入法
 
-用法:
-    pip3 install pynput keyboard
-    python3 vibe-coding-ime.py
-
+一个 Python3 脚本跨 macOS / Windows / Linux (X11 & Wayland)
 按 F1-F6 一键输出经典语录并自动回车。
 """
 
@@ -16,6 +10,8 @@ import platform
 import subprocess
 import sys
 import time
+
+__version__ = "1.0.0"
 
 # ============================================
 # 配置
@@ -110,7 +106,6 @@ class PynputHotkey(HotkeyBackend):
         self.hotkeys = {}
 
     def add_hotkey(self, key: str, callback) -> None:
-        # pynput GlobalHotKeys 使用 <f1> 格式
         pynput_key = f"<{key}>"
         self.hotkeys[pynput_key] = callback
 
@@ -155,14 +150,14 @@ class VibeCodingIME:
     def _detect_platform(self):
         """根据平台选择后端"""
         print("=" * 50)
-        print("  🇨🇳 中文 Vibe Coding 输入法 - 统一版")
+        print("  🇨🇳 中文 Vibe Coding 输入法")
         print("=" * 50)
         print(f"🖥️  检测到系统: {SYSTEM}")
 
         if IS_MACOS or IS_WINDOWS:
             self.input_backend = PynputInput()
             self.hotkey_backend = PynputHotkey()
-            print("🔧 使用 pynput 后端 (全局热键 + 模拟输入)")
+            print("🔧 使用 pynput 后端")
 
         elif IS_LINUX:
             display = detect_linux_display()
@@ -184,13 +179,11 @@ class VibeCodingIME:
         """检查并提示安装依赖"""
         missing = []
 
-        # 检查 pynput
         try:
             import pynput  # noqa: F401
         except ImportError:
             missing.append("pynput")
 
-        # 检查 keyboard (Linux 备用)
         if IS_LINUX and detect_linux_display() == "wayland":
             try:
                 import keyboard  # noqa: F401
@@ -204,7 +197,6 @@ class VibeCodingIME:
                 sys.exit(1)
 
         if IS_LINUX and detect_linux_display() != "wayland":
-            # Linux X11 下 pynput 需要 python3-xlib
             try:
                 import Xlib  # noqa: F401
             except ImportError:
@@ -216,13 +208,11 @@ class VibeCodingIME:
             print(f"   请执行: pip3 install {' '.join(missing)}")
             sys.exit(1)
 
-        # macOS 辅助功能权限提示
         if IS_MACOS:
             print("\n⚠️  首次运行需要授权辅助功能权限:")
             print("   系统设置 → 隐私与安全性 → 辅助功能")
             print("   将「终端」或「Python」加入列表并开启")
 
-        # Linux 权限提示
         if IS_LINUX:
             self._check_linux_input_group()
 
@@ -275,20 +265,14 @@ class VibeCodingIME:
         print("\n🔥 输入法已启动!")
         print("   F1-F6 一键发送  |  F12 暂停  |  Ctrl+C 退出\n")
 
-        # 绑定 F1-F6
         for key, phrase in PHRASES.items():
             self.hotkey_backend.add_hotkey(key, lambda p=phrase: self._send(p))
-
-            # 备选快捷键: ctrl+shift+1-6
             alt_key = key.replace("f", "ctrl+shift+")
             self.hotkey_backend.add_hotkey(alt_key, lambda p=phrase: self._send(p))
 
-        # F12 暂停/恢复
         self.hotkey_backend.add_pause_hotkey(self._toggle_pause)
-
         self._show_help()
 
-        # 启动监听
         try:
             self.hotkey_backend.run()
         except KeyboardInterrupt:
@@ -296,10 +280,7 @@ class VibeCodingIME:
             sys.exit(0)
 
 
-# ============================================
-# 入口
-# ============================================
-
-if __name__ == "__main__":
+def main():
+    """命令行入口"""
     ime = VibeCodingIME()
     ime.run()
